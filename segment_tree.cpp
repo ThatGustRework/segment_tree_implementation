@@ -9,24 +9,16 @@ using namespace std;
 template <class T>
 struct segment_tree
 {
-private:
-    T *root;                  /*Pointer to the root*/
+    T *root; /*Pointer to the root*/
     int srArraySize;
     int originalArraySize;
-
-public:
     segment_tree(vector<T>)
     {
-
     }
     ~segment_tree()
     {
-        
     }
-
 };
-
-
 
 int main()
 {
