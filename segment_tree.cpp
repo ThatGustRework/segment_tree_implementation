@@ -229,16 +229,19 @@ struct segment_tree
         int node_start_index,int node_end_index
     )
     {
+        //si el ranogo de de este nodo esta fuera de [l,r],no se concidera.
+        //se devuelve un numero grande que no sera minimo.
         if (node_end_index<l||r<node_start_index)
         {
             T value = 10000000;
             return value;
         }else if (l<=node_start_index && node_end_index<=r)
-        {
+        {//si este nodo esta completamente dentro de [l,r], devuelve el nodo.
             T value = root[node_index];
             return value
-        }else
+        }else//sino este nodo esta parcialmente detro de [l,r].
         {
+            //comprueba revursivamnete los hijos de este nodo y se define el minimo entre los dos.
             int middle_index = node_start_index+((node_end_index-node_start_index)/2);
             int left_child_node_index = 2*node_index+1;
             int left_child_start_index = node_start_index;
@@ -252,11 +255,13 @@ struct segment_tree
                 left_child_start_index,left_child_end_index
             );
 
+            //el valor minimo de este nodo es el minimo entre sus dos hijos.
             T right_child_min = RecursivelySearchForMin(
                 l,r,right_child_node_index,
                 right_child_start_index,right_child_end_index
             );
 
+            //devuelve este valor a la pila de recurcion.
             T value = std::min(left_child_min,right_child_min);
             return value;
         }
@@ -264,6 +269,7 @@ struct segment_tree
 
     T query(int l,int r)
     {
+        //validar l y r.
         if(l>r)
         {
             throw "L debe ser <= R.\n";
@@ -274,8 +280,8 @@ struct segment_tree
         {
             throw "R esta fuera del rango valido.\n";
         }
-
-        int root_node_index = ;
+        //comenzando por la raiz, se busca recursivamente en el arbol su valor minumo en [l,r].
+        int root_node_index = 0;
         int root_node_start_index = 0;
         int root_node_end_index = originalArraySize -1;
         T value = RecursivelySearchFornMin(L,R,root_node_end_index,root_node_start_index,root_node_end_index);
