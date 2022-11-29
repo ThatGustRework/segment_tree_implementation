@@ -1,2 +1,2 @@
 run-code:
-	g++ s_tree_examples.cpp && .\a.exe 
+	g++ segment_tree.cpp && .\a.exe 

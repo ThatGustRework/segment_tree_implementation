@@ -105,22 +105,15 @@ struct segment_tree
 
 int main()
 {
-    vector<int> segment_tree_struc;
-    segment_tree_struc.push_back(20);
-    segment_tree_struc.push_back(-6);
-    segment_tree_struc.push_back(4);
-    segment_tree_struc.push_back(8);
-    segment_tree_struc.push_back(74);
-    segment_tree_struc.push_back(-7);
-    segment_tree_struc.push_back(8);
-    segment_tree_struc.push_back(12);
-    for (size_t i = 0; i < segment_tree_struc.size(); i++)
+    vector<int> v2 = {2, 8, 5, 3};
+
+    for (size_t i = 0; i < v2.size(); i++)
     {
-        cout << segment_tree_struc[i] << "->";
+        cout << v2[i] << "->";
     }
 
     cout << "\n";
-    segment_tree<int> tree(segment_tree_struc);
+    segment_tree<int> tree = segment_tree<int>(v2);
     tree.print();
     return 0;
 }
