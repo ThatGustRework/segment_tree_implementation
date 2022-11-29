@@ -3,6 +3,9 @@
         "*.ejs": "html",
         "memory": "cpp",
         "xlocnum": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "deque": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp"
     }
 }
