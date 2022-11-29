@@ -225,70 +225,109 @@ struct segment_tree
 
     //////query/////
     T RecursivelySearchForMin(
-        int l,int r, int node_index,
-        int node_start_index,int node_end_index
-    )
+        int l, int r, int node_index,
+        int node_start_index, int node_end_index)
     {
-        //si el ranogo de de este nodo esta fuera de [l,r],no se concidera.
-        //se devuelve un numero grande que no sera minimo.
-        if (node_end_index<l||r<node_start_index)
+        // si el ranogo de de este nodo esta fuera de [l,r],no se concidera.
+        // se devuelve un numero grande que no sera minimo.
+        if (node_end_index < l || r < node_start_index)
         {
             T value = 10000000;
             return value;
-        }else if (l<=node_start_index && node_end_index<=r)
-        {//si este nodo esta completamente dentro de [l,r], devuelve el nodo.
+        }
+        else if (l <= node_start_index && node_end_index <= r)
+        { // si este nodo esta completamente dentro de [l,r], devuelve el nodo.
             T value = root[node_index];
-            return value
-        }else//sino este nodo esta parcialmente detro de [l,r].
+            return value;
+        }
+        else // sino este nodo esta parcialmente detro de [l,r].
         {
-            //comprueba revursivamnete los hijos de este nodo y se define el minimo entre los dos.
-            int middle_index = node_start_index+((node_end_index-node_start_index)/2);
-            int left_child_node_index = 2*node_index+1;
+            // comprueba revursivamnete los hijos de este nodo y se define el minimo entre los dos.
+            int middle_index = node_start_index + ((node_end_index - node_start_index) / 2);
+            int left_child_node_index = 2 * node_index + 1;
             int left_child_start_index = node_start_index;
             int left_child_end_index = middle_index;
-            int right_child_node_index = 2*node_index+2;
-            int right_child_start_index = middle_index+1;
+            int right_child_node_index = 2 * node_index + 2;
+            int right_child_start_index = middle_index + 1;
             int right_child_end_index = node_end_index;
 
             T left_child_min = RecursivelySearchForMin(
-                l,r,left_child_node_index,
-                left_child_start_index,left_child_end_index
-            );
+                l, r, left_child_node_index,
+                left_child_start_index, left_child_end_index);
 
-            //el valor minimo de este nodo es el minimo entre sus dos hijos.
+            // el valor minimo de este nodo es el minimo entre sus dos hijos.
             T right_child_min = RecursivelySearchForMin(
-                l,r,right_child_node_index,
-                right_child_start_index,right_child_end_index
-            );
+                l, r, right_child_node_index,
+                right_child_start_index, right_child_end_index);
 
-            //devuelve este valor a la pila de recurcion.
-            T value = std::min(left_child_min,right_child_min);
+            // devuelve este valor a la pila de recurcion.
+            T value = std::min(left_child_min, right_child_min);
             return value;
         }
     }
 
-    T query(int l,int r)
+    T query(int l, int r)
     {
-        //validar l y r.
-        if(l>r)
+        // validar l y r.
+        if (l > r)
         {
             throw "L debe ser <= R.\n";
-        }else if (l<0)
+        }
+        else if (l < 0)
         {
-            throw l+"esta fuera del rango valido\n";//
-        }else if (r>originalArraySize-1)
+            throw l + "esta fuera del rango valido\n"; //
+        }
+        else if (r > originalArraySize - 1)
         {
             throw "R esta fuera del rango valido.\n";
         }
-        //comenzando por la raiz, se busca recursivamente en el arbol su valor minumo en [l,r].
+
+        // comenzando por la raiz, se busca recursivamente en el arbol su valor minumo en [l,r].
         int root_node_index = 0;
         int root_node_start_index = 0;
-        int root_node_end_index = originalArraySize -1;
-        T value = RecursivelySearchFornMin(L,R,root_node_end_index,root_node_start_index,root_node_end_index);
-        return value;       
-        
+        int root_node_end_index = originalArraySize - 1;
+        T value = RecursivelySearchForMin(l, r, root_node_end_index, root_node_start_index, root_node_end_index);
+        return value;
     }
-/////////
+    /////////
+
+    int get_sum(int query_s, int query_e)
+    {
+        if (query_s < 0 || query_e > this->srArraySize || query_s > query_e)
+        {
+            cout << "Invalid Input"
+                 << "\n";
+            return -1;
+        }
+        return get_sum_query_util_v2(0,0,this->srArraySize-1,query_s,query_e);
+    }
+
+    T get_sum_query_util_v2(int index_of_root_node,
+                            int index_node_start,
+                            int index_node_end,
+                            int query_s, int query_e)
+    {
+        if (query_s <= index_node_start && query_e >= index_node_end)
+        {
+            return this->root[index_of_root_node];
+        }
+        if (index_node_end < query_s || index_node_start > query_e)
+        {
+            return 0;
+        }
+
+        int index_middle = get_middle(index_node_start, index_node_end);
+        return get_sum_query_util_v2(
+                   2 * index_of_root_node + 1,
+                   index_node_start,
+                   index_middle,
+                   query_s, query_e) +
+               get_sum_query_util_v2(
+                   2 * index_of_root_node + 2,
+                   index_middle + 1,
+                   index_node_end,
+                   query_s, query_e);
+    }
 };
 
 int main()
@@ -306,6 +345,12 @@ int main()
     cout << tree.originalArraySize << "\n";
     cout << tree.srArraySize << "\n";
     cout << tree.root[0] << "\n";
-    tree.dot("tree.dot");
+    tree.dot("tree.dot");    
+
+    cout << "T query 1-4\t"<< tree.query(1,4)<<"\n";
+    cout << "T query Sum 1-4\t"<< tree.get_sum(1,4)<<"\n";
+    tree.update(2,4);
+    tree.print();
+   
     return 0;
 }
