@@ -2,6 +2,7 @@
     "files.associations": {
         "*.ejs": "html",
         "memory": "cpp",
-        "xlocnum": "cpp"
+        "xlocnum": "cpp",
+        "xlocale": "cpp"
     }
 }
