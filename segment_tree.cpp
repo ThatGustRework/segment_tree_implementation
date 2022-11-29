@@ -101,6 +101,64 @@ struct segment_tree
 
         return aux_value;
     }
+
+
+    /*------------------*/
+
+    void update_recursive(int new_val_id, T new_val, int index_of_root_node, int index_node_start, int index_node_end) {
+		/*Hay solo dos casos para la siguiente condicional*/
+        if(index_node_start == index_node_end && index_node_start == new_val_id) {
+			root[index_of_root_node] = new_val;
+
+			return;
+			}
+
+        /*Actualizamos recursivamente el array*/
+		int index_middle = index_node_start + ((index_node_end - index_node_start) / 2);
+
+		int index_left_child_node = 2 * index_of_root_node + 1;
+		int index_right_child_node = 2 * index_of_root_node + 2;
+
+		if(index_node_start <= new_val_id && new_val_id <= index_middle) {
+			int index_left_child_node_start = index_node_start;
+			int index_left_child_node_end = index_middle;
+
+			update_recursive(new_val_id,
+                            new_val,
+                            index_left_child_node,
+                            index_left_child_node_start,
+                            index_left_child_node_end);
+			}
+		else {
+			int index_right_child_node_start = index_middle + 1;
+			int index_right_child_node_end = index_node_end;
+
+			update_recursive(new_val_id,
+                            new_val,
+                            index_right_child_node,
+                            index_right_child_node_start,
+                            index_right_child_node_end);
+			}
+        min(root[index_left_child_node], root[index_right_child_node]);
+        T aux_value = min(root[index_left_child_node], root[index_right_child_node]);
+
+		root[index_of_root_node] = aux_value;
+	}
+
+    void update(int new_val_id, T new_val)
+    {
+        cout << "Actualizando valor en el indice " << new_val_id << " a valor de " << new_val << endl;
+
+        if (new_val_id < 0 || new_val_id > originalArraySize - 1)
+        {
+            throw "Indice esta fuera del rango.\n";
+        }
+
+        int rootindex_of_root_node = 0;
+		int rootindex_node_start = 0;
+		int rootindex_node_end = originalArraySize - 1;
+        update_recursive(new_val_id, new_val, rootindex_of_root_node, rootindex_node_start, rootindex_node_end);
+    }
 };
 
 int main()
@@ -117,3 +175,11 @@ int main()
     tree.print();
     return 0;
 }
+
+
+
+
+
+
+
+
