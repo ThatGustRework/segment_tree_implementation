@@ -139,7 +139,8 @@ struct segment_tree
                             index_right_child_node_start,
                             index_right_child_node_end);
 			}
-        min(st[index_left_child_node], st[index_right_child_node]);
+        min(root[index_left_child_node], root[index_right_child_node]);
+        T aux_value = min(root[index_left_child_node], root[index_right_child_node]);
 
 		root[index_of_root_node] = aux_value;
 	}
