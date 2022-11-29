@@ -222,6 +222,67 @@ struct segment_tree
         int rootindex_node_end = originalArraySize - 1;
         update_recursive(new_val_id, new_val, rootindex_of_root_node, rootindex_node_start, rootindex_node_end);
     }
+
+    //////query/////
+    T RecursivelySearchForMin(
+        int l,int r, int node_index,
+        int node_start_index,int node_end_index
+    )
+    {
+        if (node_end_index<l||r<node_start_index)
+        {
+            T value = 10000000;
+            return value;
+        }else if (l<=node_start_index && node_end_index<=r)
+        {
+            T value = root[node_index];
+            return value
+        }else
+        {
+            int middle_index = node_start_index+((node_end_index-node_start_index)/2);
+            int left_child_node_index = 2*node_index+1;
+            int left_child_start_index = node_start_index;
+            int left_child_end_index = middle_index;
+            int right_child_node_index = 2*node_index+2;
+            int right_child_start_index = middle_index+1;
+            int right_child_end_index = node_end_index;
+
+            T left_child_min = RecursivelySearchForMin(
+                l,r,left_child_node_index,
+                left_child_start_index,left_child_end_index
+            );
+
+            T right_child_min = RecursivelySearchForMin(
+                l,r,right_child_node_index,
+                right_child_start_index,right_child_end_index
+            );
+
+            T value = std::min(left_child_min,right_child_min);
+            return value;
+        }
+    }
+
+    T query(int l,int r)
+    {
+        if(l>r)
+        {
+            throw "L debe ser <= R.\n";
+        }else if (l<0)
+        {
+            throw l+"esta fuera del rango valido\n";//
+        }else if (r>originalArraySize-1)
+        {
+            throw "R esta fuera del rango valido.\n";
+        }
+
+        int root_node_index = ;
+        int root_node_start_index = 0;
+        int root_node_end_index = originalArraySize -1;
+        T value = RecursivelySearchFornMin(L,R,root_node_end_index,root_node_start_index,root_node_end_index);
+        return value;       
+        
+    }
+/////////
 };
 
 int main()
