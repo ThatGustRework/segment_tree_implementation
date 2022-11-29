@@ -14,6 +14,36 @@ struct segment_tree
     int srArraySize; /*Segment tree array tall*/
     int originalArraySize;
 
+    void dot(string filename)
+    {
+        ofstream mydot;
+        mydot.open(filename, ios::out);
+
+        mydot << "digraph g {\n";
+        mydot << "node [shape=record, height=0.1];\n";
+        for (int i = 1; i < srArraySize + 1; i++)
+        {
+            mydot << "node_" << root[i - 1] << "_" << i - 1 << "_"
+                  << " [label = \"<l> | <m> " << root[i - 1] << " | <r>\"];\n";
+
+            if (i * 2 <= srArraySize)
+            {
+                mydot << "node_" << root[i - 1] << "_" << i - 1 << "_"
+                      << ":l -> node_" << root[i * 2 - 1] << "_" << i * 2 - 1 << "_"
+                      << ":m;\n";
+            }
+
+            if (i * 2 + 1 <= srArraySize)
+            {
+                mydot << "node_" << root[i - 1] << "_" << i - 1 << "_"
+                      << ":r -> node_" << root[i * 2] << "_" << i * 2 << "_"
+                      << ":m;\n";
+            }
+        }
+        mydot << "}";
+        mydot.close();
+    }
+
     void print()
     {
         for (int i = 0; i < srArraySize; i++)
@@ -41,21 +71,51 @@ struct segment_tree
     void Separate_memory_for_segment_t(const vector<T> &vec_original)
     {
         int segment_tree_tall = ceil(log2(originalArraySize));
-        int num_max_of_leaves = (2 * pow(2, segment_tree_tall)) - 1;
+        srArraySize = (2 * pow(2, segment_tree_tall)) - 1;
 
-        srArraySize = num_max_of_leaves;
         root = new T[srArraySize];
     }
 
     void fill_up_segment_tree(const vector<T> &vec_original)
     {
-        int index_of_root_node = 0;
+        /*int index_of_root_node = 0;
         int index_of_root_node_start = 0;
         int index_of_root_node_end = originalArraySize - 1;
-        fill_up_segment_tree_recursive(index_of_root_node,
-                                       index_of_root_node_start,
-                                       index_of_root_node_end,
+        fill_up_segment_tree_recursive(0,
+                                       0,
+                                       originalArraySize-1,
+                                       vec_original);*/
+        fill_up_segment_tree_util_v2(0, 0, originalArraySize - 1, vec_original);
+    }
+
+    int get_middle(int index_node_start, int index_node_end)
+    {
+        return index_node_start + (index_node_end - index_node_start) / 2;
+    }
+
+    T fill_up_segment_tree_util_v2(int index_of_root_node,
+                                   int index_node_start,
+                                   int index_node_end,
+                                   const vector<T> &vec_original)
+    {
+        if (index_node_start == index_node_end)
+        {
+            root[index_of_root_node] = vec_original[index_node_start];
+            return vec_original[index_node_start];
+        }
+
+        int index_middle = get_middle(index_node_start, index_node_end);
+        root[index_of_root_node] = fill_up_segment_tree_util_v2(
+                                       index_of_root_node * 2 + 1,
+                                       index_node_start,
+                                       index_middle, vec_original) +
+                                   fill_up_segment_tree_util_v2(
+                                       index_of_root_node * 2 + 2,
+                                       index_middle + 1,
+                                       index_node_end,
                                        vec_original);
+
+        return root[index_of_root_node];
     }
 
     T fill_up_segment_tree_recursive(int index_of_root_node,
@@ -73,7 +133,7 @@ struct segment_tree
         /*Debemos encontrar el nodo minimo preguntando recursivamente*/
         /*Calculamos el inicio y el final de los indices de los dos hijos*/
 
-        int index_middle = index_node_start + ((index_node_end - index_node_start) / 2);
+        int index_middle = get_middle(index_node_start, index_node_end);
 
         int index_left_child_node = 2 * index_of_root_node + 1;
         int index_left_child_node_start = index_node_start;
@@ -102,48 +162,51 @@ struct segment_tree
         return aux_value;
     }
 
-
     /*------------------*/
 
-    void update_recursive(int new_val_id, T new_val, int index_of_root_node, int index_node_start, int index_node_end) {
-		/*Hay solo dos casos para la siguiente condicional*/
-        if(index_node_start == index_node_end && index_node_start == new_val_id) {
-			root[index_of_root_node] = new_val;
+    void update_recursive(int new_val_id, T new_val, int index_of_root_node, int index_node_start, int index_node_end)
+    {
+        /*Hay solo dos casos para la siguiente condicional*/
+        if (index_node_start == index_node_end && index_node_start == new_val_id)
+        {
+            root[index_of_root_node] = new_val;
 
-			return;
-			}
+            return;
+        }
 
         /*Actualizamos recursivamente el array*/
-		int index_middle = index_node_start + ((index_node_end - index_node_start) / 2);
+        int index_middle = index_node_start + ((index_node_end - index_node_start) / 2);
 
-		int index_left_child_node = 2 * index_of_root_node + 1;
-		int index_right_child_node = 2 * index_of_root_node + 2;
+        int index_left_child_node = 2 * index_of_root_node + 1;
+        int index_right_child_node = 2 * index_of_root_node + 2;
 
-		if(index_node_start <= new_val_id && new_val_id <= index_middle) {
-			int index_left_child_node_start = index_node_start;
-			int index_left_child_node_end = index_middle;
+        if (index_node_start <= new_val_id && new_val_id <= index_middle)
+        {
+            int index_left_child_node_start = index_node_start;
+            int index_left_child_node_end = index_middle;
 
-			update_recursive(new_val_id,
-                            new_val,
-                            index_left_child_node,
-                            index_left_child_node_start,
-                            index_left_child_node_end);
-			}
-		else {
-			int index_right_child_node_start = index_middle + 1;
-			int index_right_child_node_end = index_node_end;
+            update_recursive(new_val_id,
+                             new_val,
+                             index_left_child_node,
+                             index_left_child_node_start,
+                             index_left_child_node_end);
+        }
+        else
+        {
+            int index_right_child_node_start = index_middle + 1;
+            int index_right_child_node_end = index_node_end;
 
-			update_recursive(new_val_id,
-                            new_val,
-                            index_right_child_node,
-                            index_right_child_node_start,
-                            index_right_child_node_end);
-			}
+            update_recursive(new_val_id,
+                             new_val,
+                             index_right_child_node,
+                             index_right_child_node_start,
+                             index_right_child_node_end);
+        }
         min(root[index_left_child_node], root[index_right_child_node]);
         T aux_value = min(root[index_left_child_node], root[index_right_child_node]);
 
-		root[index_of_root_node] = aux_value;
-	}
+        root[index_of_root_node] = aux_value;
+    }
 
     void update(int new_val_id, T new_val)
     {
@@ -155,15 +218,15 @@ struct segment_tree
         }
 
         int rootindex_of_root_node = 0;
-		int rootindex_node_start = 0;
-		int rootindex_node_end = originalArraySize - 1;
+        int rootindex_node_start = 0;
+        int rootindex_node_end = originalArraySize - 1;
         update_recursive(new_val_id, new_val, rootindex_of_root_node, rootindex_node_start, rootindex_node_end);
     }
 };
 
 int main()
 {
-    vector<int> v2 = {2, 8, 5, 3};
+    vector<int> v2 = {1, 9, 3, 5, 8, 9, 5, 6};
 
     for (size_t i = 0; i < v2.size(); i++)
     {
@@ -173,13 +236,9 @@ int main()
     cout << "\n";
     segment_tree<int> tree = segment_tree<int>(v2);
     tree.print();
+    cout << tree.originalArraySize << "\n";
+    cout << tree.srArraySize << "\n";
+    cout << tree.root[0] << "\n";
+    tree.dot("tree.dot");
     return 0;
 }
-
-
-
-
-
-
-
-

@@ -1,0 +1,32 @@
+digraph g {
+node [shape=record, height=0.1];
+node_46_0_ [label = "<l> | <m> 46 | <r>"];
+node_46_0_:l -> node_18_1_:m;
+node_46_0_:r -> node_28_2_:m;
+node_18_1_ [label = "<l> | <m> 18 | <r>"];
+node_18_1_:l -> node_10_3_:m;
+node_18_1_:r -> node_8_4_:m;
+node_28_2_ [label = "<l> | <m> 28 | <r>"];
+node_28_2_:l -> node_17_5_:m;
+node_28_2_:r -> node_11_6_:m;
+node_10_3_ [label = "<l> | <m> 10 | <r>"];
+node_10_3_:l -> node_1_7_:m;
+node_10_3_:r -> node_9_8_:m;
+node_8_4_ [label = "<l> | <m> 8 | <r>"];
+node_8_4_:l -> node_3_9_:m;
+node_8_4_:r -> node_5_10_:m;
+node_17_5_ [label = "<l> | <m> 17 | <r>"];
+node_17_5_:l -> node_8_11_:m;
+node_17_5_:r -> node_9_12_:m;
+node_11_6_ [label = "<l> | <m> 11 | <r>"];
+node_11_6_:l -> node_5_13_:m;
+node_11_6_:r -> node_6_14_:m;
+node_1_7_ [label = "<l> | <m> 1 | <r>"];
+node_9_8_ [label = "<l> | <m> 9 | <r>"];
+node_3_9_ [label = "<l> | <m> 3 | <r>"];
+node_5_10_ [label = "<l> | <m> 5 | <r>"];
+node_8_11_ [label = "<l> | <m> 8 | <r>"];
+node_9_12_ [label = "<l> | <m> 9 | <r>"];
+node_5_13_ [label = "<l> | <m> 5 | <r>"];
+node_6_14_ [label = "<l> | <m> 6 | <r>"];
+}
