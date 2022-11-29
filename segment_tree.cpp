@@ -151,7 +151,7 @@ struct segment_tree
 
         if (new_val_id < 0 || new_val_id > originalArraySize - 1)
         {
-            throw "Indice esta fuera del rango." << endl;
+            throw "Indice esta fuera del rango.\n";
         }
 
         int rootindex_of_root_node = 0;
